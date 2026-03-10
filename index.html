@@ -11,128 +11,143 @@
     <style>
         :root {
             --main-gold: #ffc107;
-            --dark-bg: #0a0a0a;
-            --card-bg: rgba(30, 30, 30, 0.6);
-            --text-main: #f0f0f0;
-            --text-dim: #888888;
-            --success: #4caf50;
-            --process: #2196f3;
-            --danger: #ff4444;
-            --accent-border: rgba(255, 193, 7, 0.15);
+            --page-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-dim: #777777;
+            --border-color: #f0f0f0;
+            --success: #28a745;
+            --process: #007bff;
+            --danger: #dc3545;
         }
 
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
-            margin: 0; 
-            background: var(--dark-bg);
-            background-image: radial-gradient(circle at 50% -20%, #222 0%, #0a0a0a 100%);
-            color: var(--text-main); 
-            padding-bottom: 120px; 
+            margin: 0;
+            background: var(--page-bg);
+            color: var(--text-main);
+            padding-bottom: 110px;
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
             overflow-x: hidden;
         }
 
-        header { padding: 20px 20px 10px; text-align: center; }
-        .logo { font-size: 24px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
-        .logo span { color: var(--main-gold); }
-        
-        .user-id-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(255, 193, 7, 0.05); padding: 5px 15px;
-            border-radius: 20px; font-size: 11px; margin-top: 8px;
-            border: 1px solid var(--accent-border); color: var(--main-gold);
-            font-weight: bold;
+        /* --- БЕСШОВНЫЙ ВЕРХ (ЕДИНОЕ ЦЕЛОЕ С БАННЕРОМ) --- */
+        header { 
+            padding: 15px; 
+            background: #fff; 
+            text-align: center; 
+            border-bottom: 1px solid #f9f9f9;
         }
+        .logo { font-size: 22px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin: 0; color: #000; }
+        .logo span { color: var(--main-gold); }
 
-        /* --- СТИЛИ БАННЕРА --- */
-        .banner-container {
-            margin: 10px 15px 20px;
-            background: linear-gradient(145deg, #151515, #050505);
-            border-radius: 18px;
-            overflow: hidden;
-            border: 1px solid var(--accent-border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        .banner-wrapper {
+            position: relative;
+            width: 100%;
+            line-height: 0;
+            background: #fff;
         }
 
         .banner-img {
             width: 100%;
-            height: 180px;
-            object-fit: cover;
+            height: auto;
             display: block;
         }
 
-        .banner-info {
-            padding: 15px;
+        /* Плавный переход от фото к белому фону страницы */
+        .banner-wrapper::after {
+            content: "";
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            height: 50px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #ffffff 100%);
+        }
+
+        .banner-content {
+            padding: 5px 20px 20px;
             text-align: center;
-            background: rgba(255, 193, 7, 0.03);
+            background: #fff;
         }
 
-        .address-line { font-size: 13px; font-weight: bold; color: var(--text-main); margin-bottom: 4px; }
-        .schedule-line { font-size: 11px; color: var(--main-gold); letter-spacing: 0.5px; text-transform: uppercase; }
+        .address-line { font-size: 16px; font-weight: 700; color: #000; margin-bottom: 4px; }
+        .schedule-line { font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .promo-box {
+            margin: 0 20px 25px;
+            padding: 15px;
+            border-left: 4px solid var(--main-gold);
+            background: #fcfcfc;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.5;
+        }
+        .guarantee-label { display: block; margin-top: 5px; font-weight: 800; font-size: 11px; color: #000; text-transform: uppercase; }
+
+        /* --- ПОЛЯ ВВОДА И КАРТОЧКИ --- */
+        .container { padding: 0 20px; }
         
-        .promo-text {
-            margin-top: 12px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            font-size: 13px;
-            color: #ccc;
-            line-height: 1.4;
+        .user-id-badge {
+            text-align: center; margin-bottom: 20px;
+        }
+        .user-id-badge span {
+            background: #f8f9fa; padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; color: #aaa; border: 1px solid #eee;
         }
 
-        .guarantee { color: var(--main-gold); font-weight: 800; font-size: 11px; margin-top: 4px; letter-spacing: 1px; }
+        input, select { 
+            background: #fff; border: 1px solid #ddd; border-radius: 12px; 
+            padding: 15px; color: #000; width: 100%; margin-bottom: 12px; 
+            font-size: 16px; box-sizing: border-box; outline: none; transition: 0.2s;
+        }
+        input:focus { border-color: var(--main-gold); box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.1); }
 
-        /* --- КАРТОЧКИ И ФОРМЫ --- */
+        .btn { border: none; padding: 16px; border-radius: 14px; font-weight: bold; width: 100%; cursor: pointer; font-size: 15px; transition: 0.3s; }
+        .btn-main { background: var(--main-gold); color: #000; box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3); }
+        .btn-main:active { transform: scale(0.98); }
+
         .card { 
-            background: var(--card-bg); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-            border-radius: 18px; 
-            padding: 18px; 
-            margin: 0 15px 12px; 
-            backdrop-filter: blur(10px);
+            background: #fff; border: 1px solid #eee; border-radius: 18px; 
+            padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
-        
-        .card-header { display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 8px; }
-        .tag-city { color: var(--main-gold); font-weight: bold; }
-        
-        .badge-status { font-size: 9px; padding: 4px 8px; border-radius: 6px; font-weight: bold; display: inline-block; margin-bottom: 10px; text-transform: uppercase; }
-        .bg-free { background: rgba(255,255,255,0.1); color: #fff; }
-        .bg-busy { background: rgba(33, 150, 243, 0.2); color: var(--process); }
+        .card-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 10px; color: #999; }
+        .tag-city { color: var(--main-gold); font-weight: 800; }
+        .badge-status { font-size: 10px; padding: 5px 10px; border-radius: 6px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
+        .bg-free { background: #f0f0f0; color: #666; }
+        .bg-busy { background: #e7f1ff; color: var(--process); }
 
-        .btn { border: none; padding: 14px; border-radius: 12px; font-weight: bold; width: 100%; cursor: pointer; font-size: 13px; margin-top: 5px; transition: 0.3s; }
-        .btn-main { background: var(--main-gold); color: #000; box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3); }
-        .btn-cancel { background: rgba(255, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); flex: 1; }
-        .btn-report { background: rgba(255, 255, 255, 0.05); color: #888; border: 1px solid #333; font-size: 11px; padding: 8px; flex: 1; }
-
-        nav { position: fixed; bottom: 0; width: 100%; background: rgba(10, 10, 10, 0.95); backdrop-filter: blur(20px); border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; padding: 15px 0 25px; z-index: 1000; }
-        nav button { background: none; border: none; color: #555; font-size: 10px; font-weight: bold; display: flex; flex-direction: column; align-items: center; flex: 1; gap: 5px; outline: none; }
-        nav button.active { color: var(--main-gold); }
+        /* --- НАВИГАЦИЯ --- */
+        nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; display: flex; padding: 12px 0 30px; z-index: 1000; }
+        nav button { background: none; border: none; color: #ccc; font-size: 10px; font-weight: bold; display: flex; flex-direction: column; align-items: center; flex: 1; gap: 4px; }
+        nav button.active { color: #000; }
+        nav i { font-style: normal; font-size: 20px; }
 
         .hidden { display: none; }
-        input, select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px; color: #fff; width: 100%; margin-bottom: 10px; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--main-gold); background: rgba(255,255,255,0.08); }
     </style>
 </head>
 <body>
 
 <header>
     <div class="logo">VOLT<span>MASTER</span></div>
-    <div class="user-id-badge"><span id="display-id">ID: ----</span></div>
 </header>
 
-<div class="banner-container">
+<div class="banner-wrapper">
     <img src="electrodom.jpeg" alt="Electrodom" class="banner-img">
-    <div class="banner-info">
-        <div class="address-line">📍 г. Махачкала, пр-кт Имама Шамиля 44</div>
-        <div class="schedule-line">с 9:00 до 19:00 — Без выходных</div>
-        <div class="promo-text">
-            Если вам нужен качественный материал, то обращайтесь к нам.
-            <div class="guarantee">С ГАРАНТИЕЙ КАЧЕСТВА</div>
-        </div>
-    </div>
 </div>
 
-<div id="view-add" style="padding: 0 20px 20px;">
+<div class="banner-content">
+    <div class="address-line">📍 пр-кт Имама Шамиля 44</div>
+    <div class="schedule-line">9:00 - 19:00 • Без выходных</div>
+</div>
+
+<div class="promo-box">
+    Если вам нужен качественный материал, то обращайтесь к нам.
+    <span class="guarantee-label">С ГАРАНТИЕЙ КАЧЕСТВА</span>
+</div>
+
+<div class="user-id-badge"><span id="display-id">ID: ----</span></div>
+
+<div id="view-add" class="container">
     <select id="city-input">
         <option value="Махачкала">Махачкала</option>
         <option value="Каспийск">Каспийск</option>
@@ -144,17 +159,17 @@
     <button class="btn btn-main" onclick="saveOrder()">ОПУБЛИКОВАТЬ ЗАЯВКУ</button>
 </div>
 
-<div id="view-list" class="hidden"><div id="my-orders-list"></div></div>
-<div id="view-archive" class="hidden"><div id="archive-list"></div></div>
+<div id="view-list" class="hidden container"><div id="my-orders-list"></div></div>
+<div id="view-archive" class="hidden container"><div id="archive-list"></div></div>
 
 <nav>
     <button onclick="changeView('add', this)" class="active"><i>➕</i>СОЗДАТЬ</button>
-    <button onclick="changeView('list', this)"><i>📋</i>МОИ ЗАКАЗЫ</button>
+    <button onclick="changeView('list', this)"><i>📋</i>ЗАКАЗЫ</button>
     <button onclick="changeView('archive', this)"><i>📁</i>АРХИВ</button>
 </nav>
 
 <script>
-    // --- КОНФИГУРАЦИЯ FIREBASE ---
+    // КОНФИГ
     const firebaseConfig = {
         apiKey: "AIzaSyD-dIC8bm8y4kaY7RXmMrys2wOMLA5o8vY",
         authDomain: "voltmaster-332c0.firebaseapp.com",
@@ -168,31 +183,29 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // --- ЛОГИКА ID И АВТОСОХРАНЕНИЯ ---
+    // ID Пользователя
     let userID = localStorage.getItem('volt_client_uid') || Math.floor(1000 + Math.random() * 9000).toString();
     localStorage.setItem('volt_client_uid', userID);
-    document.getElementById('display-id').innerText = "ID: " + userID;
+    document.getElementById('display-id').innerText = "Ваш клиентский ID: " + userID;
 
-    const formFields = ['task', 'address', 'phone', 'city-input'];
-
+    // АВТОСОХРАНЕНИЕ В ПАМЯТЬ БРАУЗЕРА
+    const fields = ['task', 'address', 'phone', 'city-input'];
     function saveDraft() {
-        const draft = {};
-        formFields.forEach(id => { draft[id] = document.getElementById(id).value; });
-        localStorage.setItem('volt_draft_order', JSON.stringify(draft));
+        const data = {};
+        fields.forEach(id => data[id] = document.getElementById(id).value);
+        localStorage.setItem('volt_draft_master', JSON.stringify(data));
     }
 
     function loadDraft() {
-        const saved = localStorage.getItem('volt_draft_order');
-        if (saved) {
-            const draft = JSON.parse(saved);
-            formFields.forEach(id => { if (draft[id]) document.getElementById(id).value = draft[id]; });
+        const saved = localStorage.getItem('volt_draft_master');
+        if(saved) {
+            const data = JSON.parse(saved);
+            fields.forEach(id => { if(data[id]) document.getElementById(id).value = data[id]; });
         }
     }
 
-    // Слушатели для полей
-    formFields.forEach(id => {
-        document.getElementById(id).addEventListener('input', saveDraft);
-    });
+    // Слушатели для автосохранения
+    fields.forEach(id => document.getElementById(id).addEventListener('input', saveDraft));
 
     // Маска телефона
     document.getElementById('phone').addEventListener('input', (e) => {
@@ -216,25 +229,22 @@
 
     function renderList(orders, containerId, isActive) {
         const container = document.getElementById(containerId);
-        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:50px;color:#444">У вас пока нет заказов</div>';
+        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:40px;color:#ccc;font-size:13px;">Список пуст</div>';
         
         orders.sort((a,b) => b.timestamp - a.timestamp).forEach(o => {
             const isBusy = o.status === 'busy';
-            let rejectionsHtml = o.rejections ? `<div style="background:rgba(255,0,0,0.05);padding:10px;border-radius:10px;margin-bottom:10px;font-size:11px;color:#ff8888;border:1px dashed #533">${Object.values(o.rejections).map(r => `• ${r.text}`).join('<br>')}</div>` : '';
-
             const card = document.createElement('div');
             card.className = 'card';
             if(!isActive) card.style.opacity = '0.6';
 
             card.innerHTML = `
-                <div class="card-header"><span class="tag-city">${o.city}</span><span>${isActive ? o.date : (o.closedAt || 'Завершен')}</span></div>
-                <span class="badge-status ${isBusy ? 'bg-busy' : 'bg-free'}">${!isActive ? '✅ ГОТОВО' : (isBusy ? '⏳ МАСТЕР В ПУТИ' : '🔘 ПОИСК МАСТЕРА')}</span>
-                <h3 style="margin:5px 0; font-size: 16px;">${o.task}</h3>
-                <div style="font-size:12px;color:#888;margin-bottom:10px;">📍 ${o.addr}</div>
-                ${rejectionsHtml}
-                <div style="display:flex; gap:8px;">
-                    ${isActive && !isBusy ? `<button class="btn btn-cancel" onclick="cancelOrder('${o.id}')">ОТМЕНА</button>` : ''}
-                    <button class="btn btn-report" onclick="sendComplaint('${o.id}', '${o.task}', '${o.workerID || '---'}')">ЖАЛОБА</button>
+                <div class="card-header"><span class="tag-city">${o.city}</span><span>${isActive ? o.date : (o.closedAt || 'Ок')}</span></div>
+                <span class="badge-status ${isBusy ? 'bg-busy' : 'bg-free'}">${!isActive ? '✅ ВЫПОЛНЕНО' : (isBusy ? '⏳ МАСТЕР В ПУТИ' : '🔘 ПОИСК МАСТЕРА')}</span>
+                <div style="font-weight:bold; font-size:17px; margin-bottom:4px;">${o.task}</div>
+                <div style="font-size:13px; color:#777; margin-bottom:15px;">📍 ${o.addr}</div>
+                <div style="display:flex; gap:10px;">
+                    ${isActive && !isBusy ? `<button class="btn" style="background:#fff; color:#ff4444; border:1px solid #ff4444; flex:1; padding:10px;" onclick="cancelOrder('${o.id}')">УДАЛИТЬ</button>` : ''}
+                    <button class="btn" style="background:#f8f9fa; color:#888; border:1px solid #eee; flex:1; padding:10px; font-size:11px;" onclick="sendComplaint('${o.id}', '${o.task}', '${o.workerID || '---'}')">ЖАЛОБА</button>
                 </div>
             `;
             container.appendChild(card);
@@ -242,11 +252,11 @@
     }
 
     function cancelOrder(id) {
-        if(confirm("Вы уверены, что хотите удалить заявку?")) db.ref(`shabashki/active/${id}`).remove();
+        if(confirm("Удалить вашу заявку?")) db.ref(`shabashki/active/${id}`).remove();
     }
 
     function sendComplaint(id, task, worker) {
-        const message = `⚠️ ЖАЛОБА ОТ КЛИЕНТА (ID: ${userID})\nЗаказ: ${task}\nID Мастера: ${worker}`;
+        const message = `ЖАЛОБА (ID: ${userID})\nЗаказ: ${task}\nМастер: ${worker}`;
         window.open(`https://wa.me/79640040355?text=${encodeURIComponent(message)}`, '_blank');
     }
 
@@ -256,7 +266,7 @@
         const phone = document.getElementById('phone').value;
         const city = document.getElementById('city-input').value;
 
-        if(!task || !addr || phone.length < 18) return alert("Пожалуйста, заполните все поля!");
+        if(!task || !addr || phone.length < 18) return alert("Заполните все данные!");
 
         const id = Date.now().toString();
         const data = {
@@ -266,13 +276,9 @@
         };
 
         db.ref('shabashki/active/' + id).set(data).then(() => {
-            db.ref('push_queue').push({ 
-                title: "НОВАЯ ЗАЯВКА! 🔥", 
-                body: city + ": " + task,
-                timestamp: firebase.database.ServerValue.TIMESTAMP 
-            });
-            alert("Ваша заявка опубликована!");
-            localStorage.removeItem('volt_draft_order'); // Очищаем черновик после успеха
+            db.ref('push_queue').push({ title: "НОВАЯ ЗАЯВКА", body: city + ": " + task });
+            alert("Готово! Ваша заявка видна мастерам.");
+            localStorage.removeItem('volt_draft_master');
             resetForm();
             changeView('list', document.querySelectorAll('nav button')[1]);
         });
@@ -283,12 +289,11 @@
         document.getElementById('view-' + view).classList.remove('hidden');
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
+        window.scrollTo(0,0);
     }
 
     function resetForm() {
-        document.getElementById('task').value = '';
-        document.getElementById('address').value = '';
-        document.getElementById('phone').value = '';
+        fields.forEach(id => document.getElementById(id).value = '');
     }
 
     window.onload = initSync;
