@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VOLT MASTER - КЛИЕНТ</title>
+    <title>VoltMaster - Подать заявку</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
@@ -12,13 +12,9 @@
         :root {
             --main-gold: #ffc107;
             --page-bg: #ffffff;
-            --card-bg: #ffffff;
             --text-main: #1a1a1a;
             --text-dim: #777777;
             --border-color: #f0f0f0;
-            --success: #28a745;
-            --process: #007bff;
-            --danger: #dc3545;
         }
 
         body {
@@ -29,19 +25,9 @@
             padding-bottom: 110px;
             min-height: 100vh;
             -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
         }
 
-        /* --- БЕСШОВНЫЙ ВЕРХ (ЕДИНОЕ ЦЕЛОЕ С БАННЕРОМ) --- */
-        header { 
-            padding: 15px; 
-            background: #fff; 
-            text-align: center; 
-            border-bottom: 1px solid #f9f9f9;
-        }
-        .logo { font-size: 22px; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin: 0; color: #000; }
-        .logo span { color: var(--main-gold); }
-
+        /* БАННЕР БЕЗ ОТСТУПОВ СВЕРХУ */
         .banner-wrapper {
             position: relative;
             width: 100%;
@@ -55,70 +41,78 @@
             display: block;
         }
 
-        /* Плавный переход от фото к белому фону страницы */
         .banner-wrapper::after {
             content: "";
             position: absolute;
             bottom: 0; left: 0; width: 100%;
-            height: 50px;
+            height: 60px;
             background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #ffffff 100%);
         }
 
         .banner-content {
-            padding: 5px 20px 20px;
+            padding: 5px 20px 15px;
             text-align: center;
-            background: #fff;
         }
 
         .address-line { font-size: 16px; font-weight: 700; color: #000; margin-bottom: 4px; }
-        .schedule-line { font-size: 12px; color: #999; text-transform: uppercase; letter-spacing: 0.5px; }
+        .schedule-line { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.8px; }
+
+        /* НОВЫЙ ЗАГОЛОВОК ЗАЯВКИ */
+        .order-headline {
+            text-align: center;
+            padding: 10px 20px 25px;
+        }
+
+        .order-headline h1 {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0 0 5px 0;
+            color: #000;
+            letter-spacing: -0.5px;
+        }
+
+        .client-id-soft {
+            font-size: 10px;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
         .promo-box {
             margin: 0 20px 25px;
             padding: 15px;
             border-left: 4px solid var(--main-gold);
-            background: #fcfcfc;
+            background: #fafafa;
             font-size: 14px;
             color: #444;
             line-height: 1.5;
         }
-        .guarantee-label { display: block; margin-top: 5px; font-weight: 800; font-size: 11px; color: #000; text-transform: uppercase; }
 
-        /* --- ПОЛЯ ВВОДА И КАРТОЧКИ --- */
+        .guarantee-label { display: block; margin-top: 5px; font-weight: 800; font-size: 11px; color: #000; }
+
         .container { padding: 0 20px; }
-        
-        .user-id-badge {
-            text-align: center; margin-bottom: 20px;
-        }
-        .user-id-badge span {
-            background: #f8f9fa; padding: 4px 12px; border-radius: 20px;
-            font-size: 11px; color: #aaa; border: 1px solid #eee;
-        }
 
         input, select { 
-            background: #fff; border: 1px solid #ddd; border-radius: 12px; 
-            padding: 15px; color: #000; width: 100%; margin-bottom: 12px; 
+            background: #fff; border: 1px solid #ddd; border-radius: 14px; 
+            padding: 16px; color: #000; width: 100%; margin-bottom: 12px; 
             font-size: 16px; box-sizing: border-box; outline: none; transition: 0.2s;
         }
         input:focus { border-color: var(--main-gold); box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.1); }
 
-        .btn { border: none; padding: 16px; border-radius: 14px; font-weight: bold; width: 100%; cursor: pointer; font-size: 15px; transition: 0.3s; }
-        .btn-main { background: var(--main-gold); color: #000; box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3); }
-        .btn-main:active { transform: scale(0.98); }
+        .btn-main { 
+            background: var(--main-gold); color: #000; border: none; padding: 18px; 
+            border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; 
+            font-size: 15px; box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4); 
+            text-transform: uppercase; letter-spacing: 1px;
+        }
 
         .card { 
-            background: #fff; border: 1px solid #eee; border-radius: 18px; 
-            padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            background: #fff; border: 1px solid #eee; border-radius: 20px; 
+            padding: 20px; margin-bottom: 15px; box-shadow: 0 3px 12px rgba(0,0,0,0.03);
         }
-        .card-header { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 10px; color: #999; }
-        .tag-city { color: var(--main-gold); font-weight: 800; }
-        .badge-status { font-size: 10px; padding: 5px 10px; border-radius: 6px; font-weight: bold; display: inline-block; margin-bottom: 10px; }
-        .bg-free { background: #f0f0f0; color: #666; }
-        .bg-busy { background: #e7f1ff; color: var(--process); }
 
-        /* --- НАВИГАЦИЯ --- */
         nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; display: flex; padding: 12px 0 30px; z-index: 1000; }
-        nav button { background: none; border: none; color: #ccc; font-size: 10px; font-weight: bold; display: flex; flex-direction: column; align-items: center; flex: 1; gap: 4px; }
+        nav button { background: none; border: none; color: #bbb; font-size: 10px; font-weight: bold; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         nav button.active { color: #000; }
         nav i { font-style: normal; font-size: 20px; }
 
@@ -126,10 +120,6 @@
     </style>
 </head>
 <body>
-
-<header>
-    <div class="logo">VOLT<span>MASTER</span></div>
-</header>
 
 <div class="banner-wrapper">
     <img src="electrodom.jpeg" alt="Electrodom" class="banner-img">
@@ -140,12 +130,15 @@
     <div class="schedule-line">9:00 - 19:00 • Без выходных</div>
 </div>
 
+<div class="order-headline">
+    <h1>Подать заявку на электрика</h1>
+    <div class="client-id-soft" id="display-id">ID: ----</div>
+</div>
+
 <div class="promo-box">
     Если вам нужен качественный материал, то обращайтесь к нам.
     <span class="guarantee-label">С ГАРАНТИЕЙ КАЧЕСТВА</span>
 </div>
-
-<div class="user-id-badge"><span id="display-id">ID: ----</span></div>
 
 <div id="view-add" class="container">
     <select id="city-input">
@@ -153,23 +146,22 @@
         <option value="Каспийск">Каспийск</option>
         <option value="Буйнакск">Буйнакск</option>
     </select>
-    <input type="text" id="task" placeholder="Что нужно сделать?">
-    <input type="text" id="address" placeholder="Адрес (улица, дом)">
+    <input type="text" id="task" placeholder="Какая работа требуется?">
+    <input type="text" id="address" placeholder="Ваш адрес (улица, дом)">
     <input type="tel" id="phone" placeholder="+7 (___) ___-__-__">
-    <button class="btn btn-main" onclick="saveOrder()">ОПУБЛИКОВАТЬ ЗАЯВКУ</button>
+    <button class="btn-main" onclick="saveOrder()">Отправить заявку</button>
 </div>
 
 <div id="view-list" class="hidden container"><div id="my-orders-list"></div></div>
 <div id="view-archive" class="hidden container"><div id="archive-list"></div></div>
 
 <nav>
-    <button onclick="changeView('add', this)" class="active"><i>➕</i>СОЗДАТЬ</button>
+    <button onclick="changeView('add', this)" class="active"><i>➕</i>ВЫЗОВ</button>
     <button onclick="changeView('list', this)"><i>📋</i>ЗАКАЗЫ</button>
     <button onclick="changeView('archive', this)"><i>📁</i>АРХИВ</button>
 </nav>
 
 <script>
-    // КОНФИГ
     const firebaseConfig = {
         apiKey: "AIzaSyD-dIC8bm8y4kaY7RXmMrys2wOMLA5o8vY",
         authDomain: "voltmaster-332c0.firebaseapp.com",
@@ -183,12 +175,11 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    // ID Пользователя
     let userID = localStorage.getItem('volt_client_uid') || Math.floor(1000 + Math.random() * 9000).toString();
     localStorage.setItem('volt_client_uid', userID);
-    document.getElementById('display-id').innerText = "Ваш клиентский ID: " + userID;
+    document.getElementById('display-id').innerText = "Ваш клиентский номер: " + userID;
 
-    // АВТОСОХРАНЕНИЕ В ПАМЯТЬ БРАУЗЕРА
+    // Автосохранение
     const fields = ['task', 'address', 'phone', 'city-input'];
     function saveDraft() {
         const data = {};
@@ -204,10 +195,8 @@
         }
     }
 
-    // Слушатели для автосохранения
     fields.forEach(id => document.getElementById(id).addEventListener('input', saveDraft));
 
-    // Маска телефона
     document.getElementById('phone').addEventListener('input', (e) => {
         let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
         if (!x[2]) e.target.value = x[1] ? '+7 (' : '';
@@ -229,35 +218,22 @@
 
     function renderList(orders, containerId, isActive) {
         const container = document.getElementById(containerId);
-        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:40px;color:#ccc;font-size:13px;">Список пуст</div>';
+        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:40px;color:#ccc;">Активных заявок нет</div>';
         
         orders.sort((a,b) => b.timestamp - a.timestamp).forEach(o => {
             const isBusy = o.status === 'busy';
             const card = document.createElement('div');
             card.className = 'card';
-            if(!isActive) card.style.opacity = '0.6';
-
             card.innerHTML = `
-                <div class="card-header"><span class="tag-city">${o.city}</span><span>${isActive ? o.date : (o.closedAt || 'Ок')}</span></div>
-                <span class="badge-status ${isBusy ? 'bg-busy' : 'bg-free'}">${!isActive ? '✅ ВЫПОЛНЕНО' : (isBusy ? '⏳ МАСТЕР В ПУТИ' : '🔘 ПОИСК МАСТЕРА')}</span>
-                <div style="font-weight:bold; font-size:17px; margin-bottom:4px;">${o.task}</div>
-                <div style="font-size:13px; color:#777; margin-bottom:15px;">📍 ${o.addr}</div>
-                <div style="display:flex; gap:10px;">
-                    ${isActive && !isBusy ? `<button class="btn" style="background:#fff; color:#ff4444; border:1px solid #ff4444; flex:1; padding:10px;" onclick="cancelOrder('${o.id}')">УДАЛИТЬ</button>` : ''}
-                    <button class="btn" style="background:#f8f9fa; color:#888; border:1px solid #eee; flex:1; padding:10px; font-size:11px;" onclick="sendComplaint('${o.id}', '${o.task}', '${o.workerID || '---'}')">ЖАЛОБА</button>
+                <div style="font-size:10px; color:#999; margin-bottom:5px;">${o.date} • ${o.city}</div>
+                <div style="font-weight:bold; font-size:17px; margin-bottom:5px;">${o.task}</div>
+                <div style="font-size:13px; color:#777; margin-bottom:12px;">📍 ${o.addr}</div>
+                <div style="color:${isBusy ? '#007bff' : '#666'}; font-size:11px; font-weight:bold; text-transform:uppercase;">
+                    ${isActive ? (isBusy ? '⏳ Мастер в пути' : '🔘 Поиск мастера...') : '✅ Выполнено'}
                 </div>
             `;
             container.appendChild(card);
         });
-    }
-
-    function cancelOrder(id) {
-        if(confirm("Удалить вашу заявку?")) db.ref(`shabashki/active/${id}`).remove();
-    }
-
-    function sendComplaint(id, task, worker) {
-        const message = `ЖАЛОБА (ID: ${userID})\nЗаказ: ${task}\nМастер: ${worker}`;
-        window.open(`https://wa.me/79640040355?text=${encodeURIComponent(message)}`, '_blank');
     }
 
     function saveOrder() {
@@ -266,7 +242,7 @@
         const phone = document.getElementById('phone').value;
         const city = document.getElementById('city-input').value;
 
-        if(!task || !addr || phone.length < 18) return alert("Заполните все данные!");
+        if(!task || !addr || phone.length < 18) return alert("Заполните все данные для связи!");
 
         const id = Date.now().toString();
         const data = {
@@ -277,7 +253,7 @@
 
         db.ref('shabashki/active/' + id).set(data).then(() => {
             db.ref('push_queue').push({ title: "НОВАЯ ЗАЯВКА", body: city + ": " + task });
-            alert("Готово! Ваша заявка видна мастерам.");
+            alert("Ваша заявка принята! Ожидайте звонка мастера.");
             localStorage.removeItem('volt_draft_master');
             resetForm();
             changeView('list', document.querySelectorAll('nav button')[1]);
