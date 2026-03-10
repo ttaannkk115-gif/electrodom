@@ -117,9 +117,9 @@ nav i { font-style: normal; font-size: 20px; }
 <div id="view-archive" class="hidden" style="padding: 0 20px;"><div id="archive-list"></div></div>
 
 <nav>
-    <button onclick="changeView('add', this)" class="active"><i>➕</i>ВЫЗОВ</button>
-    <button onclick="changeView('list', this)"><i>📋</i>ЗАКАЗЫ</button>
-    <button onclick="changeView('archive', this)"><i>📁</i>АРХИВ</button>
+    <button id="nav-add" onclick="changeView('add', this)" class="active"><i>➕</i>ВЫЗОВ</button>
+    <button id="nav-list" onclick="changeView('list', this)"><i>📋</i>ЗАКАЗЫ</button>
+    <button id="nav-archive" onclick="changeView('archive', this)"><i>📁</i>АРХИВ</button>
 </nav>
 <script>
     const firebaseConfig = {
@@ -256,11 +256,22 @@ setTimeout(() => {
     }
 
     function changeView(view, btn) {
-        ['view-add', 'view-list', 'view-archive'].forEach(v => document.getElementById(v).classList.add('hidden'));
-        document.getElementById('view-' + view).classList.remove('hidden');
-        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-        if(btn) btn.classList.add('active');
-    }
+    // Скрываем все разделы
+    ['view-add', 'view-list', 'view-archive'].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.classList.add('hidden');
+    });
+
+    // Показываем нужный раздел
+    const target = document.getElementById('view-' + view);
+    if(target) target.classList.remove('hidden');
+
+    // Управляем активностью кнопок в меню
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    
+    window.scrollTo(0, 0);
+}
 
     function resetForm() {
         document.getElementById('task').value = '';
