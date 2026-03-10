@@ -191,34 +191,55 @@ nav i { font-style: normal; font-size: 20px; }
     }
 
     function renderList(orders, containerId, isActive) {
-        const container = document.getElementById(containerId);
-        if(!container) return;
-        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:50px;color:#ccc">Пусто</div>';
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:50px;color:#ccc">Пусто</div>';
+    
+    orders.sort((a,b) => b.timestamp - a.timestamp).forEach(o => {
+        const isBusy = o.status === 'busy';
         
-        orders.sort((a,b) => b.timestamp - a.timestamp).forEach(o => {
-            const isBusy = o.status === 'busy';
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.style.background = '#fff';
-            card.style.border = '1px solid #eee';
-            card.style.borderRadius = '15px';
-            card.style.padding = '15px';
-            card.style.marginBottom = '10px';
-            if(!isActive) card.style.opacity = '0.6';
+        // Блок причины отказа (если есть)
+        let rejectionHtml = '';
+        if (o.rejections) {
+            const lastRej = Object.values(o.rejections).pop(); // Берем последний отказ
+            rejectionHtml = `
+                <div style="margin-top:10px; padding:10px; background:#fff5f5; border-radius:10px; border:1px solid #feb2b2; font-size:12px; color:#c53030;">
+                    <strong>Причина отказа:</strong> ${lastRej.text || 'Не указана'}
+                </div>`;
+        }
 
-            card.innerHTML = `
-                <div style="display:flex; justify-content:space-between; font-size:10px; color:#999; margin-bottom:5px;">
-                    <b>${o.city}</b> <span>${isActive ? o.date : (o.closedAt || 'Ок')}</span>
-                </div>
-                <div style="font-weight:bold; margin-bottom:5px;">${o.task}</div>
-                <div style="font-size:12px; color:#666; margin-bottom:10px;">📍 ${o.addr}</div>
-                <div style="display:flex; gap:8px;">
-                    ${isActive && !isBusy ? `<button style="flex:1; padding:8px; border:1px solid #ff4444; color:#ff4444; background:none; border-radius:10px;" onclick="cancelOrder('${o.id}')">Отмена</button>` : ''}
-                    <button style="flex:1; padding:8px; border:1px solid #ddd; color:#888; background:#f9f9f9; border-radius:10px;" onclick="sendComplaint('${o.id}', '${o.task}', '${o.workerID || '---'}')">Жалоба</button>
-                </div>
-            `;
-            container.appendChild(card);
-        });
+        // Надпись о том, кто принял работу
+        let workerInfo = '';
+        if (isBusy && o.workerID) {
+            workerInfo = `
+                <div style="margin-top:10px; font-size:12px; color:#2b6cb0; font-weight:bold;">
+                    ✅ Вашу работу принял мастер ID: ${o.workerID}
+                </div>`;
+        }
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.cssText = "background:#fff; border:1px solid #eee; border-radius:18px; padding:18px; margin-bottom:15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);";
+        if(!isActive) card.style.opacity = '0.6';
+
+        card.innerHTML = `
+            <div style="display:flex; justify-content:space-between; font-size:10px; color:#999; margin-bottom:8px;">
+                <b style="color:var(--main-gold)">${o.city}</b> <span>${isActive ? o.date : (o.closedAt || 'Завершено')}</span>
+            </div>
+            <div style="font-weight:bold; font-size:16px; margin-bottom:5px; color:#000;">${o.task}</div>
+            <div style="font-size:13px; color:#666; margin-bottom:5px;">📍 ${o.addr}</div>
+            
+            ${workerInfo}
+            ${rejectionHtml}
+
+            <div style="display:flex; gap:8px; margin-top:15px;">
+                ${isActive && !isBusy ? `<button style="flex:1; padding:10px; border:1px solid #ff4444; color:#ff4444; background:none; border-radius:12px; font-weight:bold; font-size:12px;" onclick="cancelOrder('${o.id}')">УДАЛИТЬ</button>` : ''}
+                <button style="flex:1; padding:10px; border:1px solid #eee; color:#888; background:#f9f9f9; border-radius:12px; font-weight:bold; font-size:12px;" onclick="sendComplaint('${o.id}', '${o.task}', '${o.workerID || '---'}')">ЖАЛОБА</button>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+    
     }
 
     function cancelOrder(id) {
