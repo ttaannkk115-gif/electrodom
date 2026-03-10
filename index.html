@@ -329,6 +329,26 @@ nav i { font-style: normal; font-size: 20px; }
     }
 
     window.onload = initSync;
+// Автоматический префикс при фокусе
+const taskInput = document.getElementById('task');
+
+taskInput.addEventListener('focus', function() {
+    if (this.value.trim() === "") {
+        this.value = "Шабашка, ";
+        // Небольшая задержка, чтобы курсор точно встал в конец
+        setTimeout(() => {
+            this.setSelectionRange(this.value.length, this.value.length);
+        }, 10);
+    }
+});
+
+// Защита от случайного удаления запятой
+taskInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Backspace' && this.value === "Шабашка, ") {
+        e.preventDefault();
+    }
+});
+
 </script>
 </body>
 </html>
