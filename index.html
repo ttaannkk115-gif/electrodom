@@ -91,14 +91,14 @@ nav i { font-style: normal; font-size: 20px; }
     <div class="schedule-line">9:00 - 19:00 • Без выходных</div>
 </div>
 
-<div class="order-headline">
-    <h1>Подать заявку на электрика</h1>
-    <div class="client-id-soft" id="display-id">ID: ----</div>
-</div>
-
 <div class="promo-box">
     Если вам нужен качественный материал, то обращайтесь к нам.
     <span class="guarantee-label">С ГАРАНТИЕЙ КАЧЕСТВА</span>
+</div>
+
+<div class="order-headline">
+    <h1>Подать заявку на электрика</h1>
+    <div class="client-id-soft" id="display-id">ID: ----</div>
 </div>
 
 <div id="view-add" style="padding: 0 20px;">
@@ -122,7 +122,7 @@ nav i { font-style: normal; font-size: 20px; }
     <button id="nav-archive" onclick="changeView('archive', this)"><i>📁</i>АРХИВ</button>
 </nav>
 <script>
-    const firebaseConfig = {
+        const firebaseConfig = {
         apiKey: "AIzaSyD-dIC8bm8y4kaY7RXmMrys2wOMLA5o8vY",
         authDomain: "voltmaster-332c0.firebaseapp.com",
         databaseURL: "https://voltmaster-332c0-default-rtdb.firebaseio.com",
@@ -139,48 +139,47 @@ nav i { font-style: normal; font-size: 20px; }
     localStorage.setItem('volt_client_uid', userID);
     document.getElementById('display-id').innerText = "ID: " + userID;
 
-    // Маска телефона (соответствует оригиналу)
+    // Маска телефона
     document.getElementById('phone').addEventListener('input', (e) => {
         let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
         if (!x[2]) e.target.value = x[1] ? '+7 (' : '';
         else e.target.value = '+7 (' + x[2] + (x[3] ? ') ' + x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
     });
-// Поля для автоматического запоминания
-const fields = ['task', 'address', 'phone', 'city-input'];
 
-// Функция записи в память браузера
-function saveDraft() {
-    const data = {};
-    fields.forEach(id => {
-        const el = document.getElementById(id);
-        if(el) data[id] = el.value;
-    });
-    localStorage.setItem('volt_draft_master', JSON.stringify(data));
-}
+    // Автосохранение
+    const fields = ['task', 'address', 'phone', 'city-input'];
 
-// Функция восстановления из памяти
-function loadDraft() {
-    const saved = localStorage.getItem('volt_draft_master');
-    if(saved) {
-        const data = JSON.parse(saved);
+    function saveDraft() {
+        const data = {};
         fields.forEach(id => {
             const el = document.getElementById(id);
-            if(el && data[id]) el.value = data[id];
+            if(el) data[id] = el.value;
         });
+        localStorage.setItem('volt_draft_master', JSON.stringify(data));
     }
-}
 
-// Запускаем слежение за вводом
-setTimeout(() => {
-    fields.forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.addEventListener('input', saveDraft);
-    });
-}, 500);
+    function loadDraft() {
+        const saved = localStorage.getItem('volt_draft_master');
+        if(saved) {
+            const data = JSON.parse(saved);
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if(el && data[id]) el.value = data[id];
+            });
+        }
+    }
 
+    // Слежение за вводом
+    setTimeout(() => {
+        fields.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.addEventListener('input', saveDraft);
+        });
+    }, 500);
+
+    // --- ИСПРАВЛЕННАЯ ФУНКЦИЯ INIT ---
     function initSync() {
-        function initSync() {
-    loadDraft();
+        loadDraft();
         db.ref('shabashki/active').on('value', snap => {
             const all = Object.values(snap.val() || {});
             renderList(all.filter(o => o.ownerID == userID), 'my-orders-list', true);
@@ -193,25 +192,29 @@ setTimeout(() => {
 
     function renderList(orders, containerId, isActive) {
         const container = document.getElementById(containerId);
-        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:50px;color:#444">Пусто</div>';
+        if(!container) return;
+        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:50px;color:#ccc">Пусто</div>';
         
         orders.sort((a,b) => b.timestamp - a.timestamp).forEach(o => {
             const isBusy = o.status === 'busy';
-            let rejectionsHtml = o.rejections ? `<div class="rej-box">${Object.values(o.rejections).map(r => `• ${r.text}`).join('<br>')}</div>` : '';
-
             const card = document.createElement('div');
             card.className = 'card';
+            card.style.background = '#fff';
+            card.style.border = '1px solid #eee';
+            card.style.borderRadius = '15px';
+            card.style.padding = '15px';
+            card.style.marginBottom = '10px';
             if(!isActive) card.style.opacity = '0.6';
 
             card.innerHTML = `
-                <div class="card-header"><span class="tag-city">${o.city}</span><span>${isActive ? o.date : (o.closedAt || 'Ок')}</span></div>
-                <span class="badge-status ${isBusy ? 'bg-busy' : 'bg-free'}">${!isActive ? '✅ ГОТОВО' : (isBusy ? '⏳ МАСТЕР В ПУТИ' : '🔘 ПОИСК')}</span>
-                <h3 style="margin:5px 0">${o.task}</h3>
-                <div style="font-size:12px;color:#888">📍 ${o.addr}</div>
-                ${rejectionsHtml}
-                <div style="display:flex; gap:8px; margin-top:10px;">
-                    ${isActive && !isBusy ? `<button class="btn btn-cancel" onclick="cancelOrder('${o.id}')">ОТМЕНА</button>` : ''}
-                    <button class="btn btn-report" onclick="sendComplaint('${o.id}', '${o.task}', '${o.workerID || '---'}')">ЖАЛОБА</button>
+                <div style="display:flex; justify-content:space-between; font-size:10px; color:#999; margin-bottom:5px;">
+                    <b>${o.city}</b> <span>${isActive ? o.date : (o.closedAt || 'Ок')}</span>
+                </div>
+                <div style="font-weight:bold; margin-bottom:5px;">${o.task}</div>
+                <div style="font-size:12px; color:#666; margin-bottom:10px;">📍 ${o.addr}</div>
+                <div style="display:flex; gap:8px;">
+                    ${isActive && !isBusy ? `<button style="flex:1; padding:8px; border:1px solid #ff4444; color:#ff4444; background:none; border-radius:10px;" onclick="cancelOrder('${o.id}')">Отмена</button>` : ''}
+                    <button style="flex:1; padding:8px; border:1px solid #ddd; color:#888; background:#f9f9f9; border-radius:10px;" onclick="sendComplaint('${o.id}', '${o.task}', '${o.workerID || '---'}')">Жалоба</button>
                 </div>
             `;
             container.appendChild(card);
@@ -243,35 +246,42 @@ setTimeout(() => {
         };
 
         db.ref('shabashki/active/' + id).set(data).then(() => {
-            // Уведомление для приложения мастеров (соответствует оригиналу)
             db.ref('push_queue').push({ 
                 title: "НОВАЯ ШАБАШКА! 🔥", 
                 body: city + ": " + task,
                 timestamp: firebase.database.ServerValue.TIMESTAMP 
             });
             alert("Заявка создана!");
+            localStorage.removeItem('volt_draft_master');
             resetForm();
-            changeView('list', document.querySelectorAll('nav button')[1]);
+            changeView('list', document.getElementById('nav-list'));
         });
     }
 
     function changeView(view, btn) {
-    // Скрываем все разделы
-    ['view-add', 'view-list', 'view-archive'].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.classList.add('hidden');
-    });
+        // Скрываем все разделы
+        const views = ['view-add', 'view-list', 'view-archive'];
+        views.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.classList.add('hidden');
+                el.style.display = 'none'; // Гарантированное скрытие
+            }
+        });
 
-    // Показываем нужный раздел
-    const target = document.getElementById('view-' + view);
-    if(target) target.classList.remove('hidden');
+        // Показываем нужный
+        const target = document.getElementById('view-' + view);
+        if(target) {
+            target.classList.remove('hidden');
+            target.style.display = 'block'; // Гарантированное отображение
+        }
 
-    // Управляем активностью кнопок в меню
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    if(btn) btn.classList.add('active');
-    
-    window.scrollTo(0, 0);
-}
+        // Кнопки
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active');
+        
+        window.scrollTo(0, 0);
+    }
 
     function resetForm() {
         document.getElementById('task').value = '';
