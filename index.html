@@ -3,124 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VoltMaster - Подать заявку</title>
+    <title>VOLT MASTER - КЛИЕНТ</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database-compat.js"></script>
 
     <style>
         :root {
-            --main-gold: #ffc107;
-            --page-bg: #ffffff;
-            --text-main: #1a1a1a;
-            --text-dim: #777777;
-            --border-color: #f0f0f0;
-        }
+    --main-gold: #ffc107;
+    --page-bg: #ffffff;
+    --text-main: #1a1a1a;
+    --border-color: #f0f0f0;
+}
 
-        body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            background: var(--page-bg);
-            color: var(--text-main);
-            padding-bottom: 110px;
-            min-height: 100vh;
-            -webkit-tap-highlight-color: transparent;
-        }
+body {
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--text-main);
+    padding-bottom: 110px;
+    min-height: 100vh;
+    -webkit-tap-highlight-color: transparent;
+}
 
-        /* БАННЕР БЕЗ ОТСТУПОВ СВЕРХУ */
-        .banner-wrapper {
-            position: relative;
-            width: 100%;
-            line-height: 0;
-            background: #fff;
-        }
+/* Бесшовный баннер */
+.banner-wrapper {
+    position: relative;
+    width: 100%;
+    line-height: 0;
+    background: #fff;
+}
+.banner-img { width: 100%; height: auto; display: block; }
+.banner-wrapper::after {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0; width: 100%;
+    height: 60px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #ffffff 100%);
+}
 
-        .banner-img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+.banner-content { padding: 5px 20px 15px; text-align: center; }
+.address-line { font-size: 16px; font-weight: 700; color: #000; margin-bottom: 4px; }
+.schedule-line { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.8px; }
 
-        .banner-wrapper::after {
-            content: "";
-            position: absolute;
-            bottom: 0; left: 0; width: 100%;
-            height: 60px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #ffffff 100%);
-        }
+/* Заголовок заявки */
+.order-headline { text-align: center; padding: 10px 20px 25px; }
+.order-headline h1 { font-size: 20px; font-weight: 800; margin: 0 0 5px 0; color: #000; letter-spacing: -0.5px; }
+.client-id-soft { font-size: 10px; color: #ccc; text-transform: uppercase; letter-spacing: 1px; }
 
-        .banner-content {
-            padding: 5px 20px 15px;
-            text-align: center;
-        }
+.promo-box {
+    margin: 0 20px 25px;
+    padding: 15px;
+    border-left: 4px solid var(--main-gold);
+    background: #fafafa;
+    font-size: 14px;
+    color: #444;
+}
+.guarantee-label { display: block; margin-top: 5px; font-weight: 800; font-size: 11px; color: #000; }
 
-        .address-line { font-size: 16px; font-weight: 700; color: #000; margin-bottom: 4px; }
-        .schedule-line { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 0.8px; }
+/* Поля ввода */
+input, select { 
+    background: #fff; border: 1px solid #ddd; border-radius: 14px; 
+    padding: 16px; width: 100%; margin-bottom: 12px; font-size: 16px; box-sizing: border-box; outline: none; transition: 0.2s;
+}
+input:focus { border-color: var(--main-gold); box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.1); }
 
-        /* НОВЫЙ ЗАГОЛОВОК ЗАЯВКИ */
-        .order-headline {
-            text-align: center;
-            padding: 10px 20px 25px;
-        }
+.btn-main { 
+    background: var(--main-gold); color: #000; border: none; padding: 18px; 
+    border-radius: 16px; font-weight: 800; width: 100%; font-size: 15px; 
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4); text-transform: uppercase;
+}
 
-        .order-headline h1 {
-            font-size: 20px;
-            font-weight: 800;
-            margin: 0 0 5px 0;
-            color: #000;
-            letter-spacing: -0.5px;
-        }
-
-        .client-id-soft {
-            font-size: 10px;
-            color: #ccc;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .promo-box {
-            margin: 0 20px 25px;
-            padding: 15px;
-            border-left: 4px solid var(--main-gold);
-            background: #fafafa;
-            font-size: 14px;
-            color: #444;
-            line-height: 1.5;
-        }
-
-        .guarantee-label { display: block; margin-top: 5px; font-weight: 800; font-size: 11px; color: #000; }
-
-        .container { padding: 0 20px; }
-
-        input, select { 
-            background: #fff; border: 1px solid #ddd; border-radius: 14px; 
-            padding: 16px; color: #000; width: 100%; margin-bottom: 12px; 
-            font-size: 16px; box-sizing: border-box; outline: none; transition: 0.2s;
-        }
-        input:focus { border-color: var(--main-gold); box-shadow: 0 0 0 4px rgba(255, 193, 7, 0.1); }
-
-        .btn-main { 
-            background: var(--main-gold); color: #000; border: none; padding: 18px; 
-            border-radius: 16px; font-weight: 800; width: 100%; cursor: pointer; 
-            font-size: 15px; box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4); 
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        .card { 
-            background: #fff; border: 1px solid #eee; border-radius: 20px; 
-            padding: 20px; margin-bottom: 15px; box-shadow: 0 3px 12px rgba(0,0,0,0.03);
-        }
-
-        nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; display: flex; padding: 12px 0 30px; z-index: 1000; }
-        nav button { background: none; border: none; color: #bbb; font-size: 10px; font-weight: bold; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        nav button.active { color: #000; }
-        nav i { font-style: normal; font-size: 20px; }
-
-        .hidden { display: none; }
+nav { position: fixed; bottom: 0; width: 100%; background: #fff; border-top: 1px solid #eee; display: flex; padding: 12px 0 30px; z-index: 1000; }
+nav button { background: none; border: none; color: #bbb; font-size: 10px; flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+nav button.active { color: #000; }
+nav i { font-style: normal; font-size: 20px; }
+.hidden { display: none; }
     </style>
 </head>
 <body>
-
 <div class="banner-wrapper">
     <img src="electrodom.jpeg" alt="Electrodom" class="banner-img">
 </div>
@@ -140,7 +101,7 @@
     <span class="guarantee-label">С ГАРАНТИЕЙ КАЧЕСТВА</span>
 </div>
 
-<div id="view-add" class="container">
+<div id="view-add" style="padding: 0 20px;">
     <select id="city-input">
         <option value="Махачкала">Махачкала</option>
         <option value="Каспийск">Каспийск</option>
@@ -152,15 +113,14 @@
     <button class="btn-main" onclick="saveOrder()">Отправить заявку</button>
 </div>
 
-<div id="view-list" class="hidden container"><div id="my-orders-list"></div></div>
-<div id="view-archive" class="hidden container"><div id="archive-list"></div></div>
+<div id="view-list" class="hidden" style="padding: 0 20px;"><div id="my-orders-list"></div></div>
+<div id="view-archive" class="hidden" style="padding: 0 20px;"><div id="archive-list"></div></div>
 
 <nav>
     <button onclick="changeView('add', this)" class="active"><i>➕</i>ВЫЗОВ</button>
     <button onclick="changeView('list', this)"><i>📋</i>ЗАКАЗЫ</button>
     <button onclick="changeView('archive', this)"><i>📁</i>АРХИВ</button>
 </nav>
-
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyD-dIC8bm8y4kaY7RXmMrys2wOMLA5o8vY",
@@ -177,35 +137,50 @@
 
     let userID = localStorage.getItem('volt_client_uid') || Math.floor(1000 + Math.random() * 9000).toString();
     localStorage.setItem('volt_client_uid', userID);
-    document.getElementById('display-id').innerText = "Ваш клиентский номер: " + userID;
+    document.getElementById('display-id').innerText = "ID: " + userID;
 
-    // Автосохранение
-    const fields = ['task', 'address', 'phone', 'city-input'];
-    function saveDraft() {
-        const data = {};
-        fields.forEach(id => data[id] = document.getElementById(id).value);
-        localStorage.setItem('volt_draft_master', JSON.stringify(data));
-    }
-
-    function loadDraft() {
-        const saved = localStorage.getItem('volt_draft_master');
-        if(saved) {
-            const data = JSON.parse(saved);
-            fields.forEach(id => { if(data[id]) document.getElementById(id).value = data[id]; });
-        }
-    }
-
-    fields.forEach(id => document.getElementById(id).addEventListener('input', saveDraft));
-
+    // Маска телефона (соответствует оригиналу)
     document.getElementById('phone').addEventListener('input', (e) => {
         let x = e.target.value.replace(/\D/g, '').match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,2})(\d{0,2})/);
         if (!x[2]) e.target.value = x[1] ? '+7 (' : '';
         else e.target.value = '+7 (' + x[2] + (x[3] ? ') ' + x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
-        saveDraft();
     });
+// Поля для автоматического запоминания
+const fields = ['task', 'address', 'phone', 'city-input'];
+
+// Функция записи в память браузера
+function saveDraft() {
+    const data = {};
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) data[id] = el.value;
+    });
+    localStorage.setItem('volt_draft_master', JSON.stringify(data));
+}
+
+// Функция восстановления из памяти
+function loadDraft() {
+    const saved = localStorage.getItem('volt_draft_master');
+    if(saved) {
+        const data = JSON.parse(saved);
+        fields.forEach(id => {
+            const el = document.getElementById(id);
+            if(el && data[id]) el.value = data[id];
+        });
+    }
+}
+
+// Запускаем слежение за вводом
+setTimeout(() => {
+    fields.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('input', saveDraft);
+    });
+}, 500);
 
     function initSync() {
-        loadDraft();
+        function initSync() {
+    loadDraft();
         db.ref('shabashki/active').on('value', snap => {
             const all = Object.values(snap.val() || {});
             renderList(all.filter(o => o.ownerID == userID), 'my-orders-list', true);
@@ -218,22 +193,38 @@
 
     function renderList(orders, containerId, isActive) {
         const container = document.getElementById(containerId);
-        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:40px;color:#ccc;">Активных заявок нет</div>';
+        container.innerHTML = orders.length ? '' : '<div style="text-align:center;padding:50px;color:#444">Пусто</div>';
         
         orders.sort((a,b) => b.timestamp - a.timestamp).forEach(o => {
             const isBusy = o.status === 'busy';
+            let rejectionsHtml = o.rejections ? `<div class="rej-box">${Object.values(o.rejections).map(r => `• ${r.text}`).join('<br>')}</div>` : '';
+
             const card = document.createElement('div');
             card.className = 'card';
+            if(!isActive) card.style.opacity = '0.6';
+
             card.innerHTML = `
-                <div style="font-size:10px; color:#999; margin-bottom:5px;">${o.date} • ${o.city}</div>
-                <div style="font-weight:bold; font-size:17px; margin-bottom:5px;">${o.task}</div>
-                <div style="font-size:13px; color:#777; margin-bottom:12px;">📍 ${o.addr}</div>
-                <div style="color:${isBusy ? '#007bff' : '#666'}; font-size:11px; font-weight:bold; text-transform:uppercase;">
-                    ${isActive ? (isBusy ? '⏳ Мастер в пути' : '🔘 Поиск мастера...') : '✅ Выполнено'}
+                <div class="card-header"><span class="tag-city">${o.city}</span><span>${isActive ? o.date : (o.closedAt || 'Ок')}</span></div>
+                <span class="badge-status ${isBusy ? 'bg-busy' : 'bg-free'}">${!isActive ? '✅ ГОТОВО' : (isBusy ? '⏳ МАСТЕР В ПУТИ' : '🔘 ПОИСК')}</span>
+                <h3 style="margin:5px 0">${o.task}</h3>
+                <div style="font-size:12px;color:#888">📍 ${o.addr}</div>
+                ${rejectionsHtml}
+                <div style="display:flex; gap:8px; margin-top:10px;">
+                    ${isActive && !isBusy ? `<button class="btn btn-cancel" onclick="cancelOrder('${o.id}')">ОТМЕНА</button>` : ''}
+                    <button class="btn btn-report" onclick="sendComplaint('${o.id}', '${o.task}', '${o.workerID || '---'}')">ЖАЛОБА</button>
                 </div>
             `;
             container.appendChild(card);
         });
+    }
+
+    function cancelOrder(id) {
+        if(confirm("Удалить вашу заявку?")) db.ref(`shabashki/active/${id}`).remove();
+    }
+
+    function sendComplaint(id, task, worker) {
+        const message = `⚠️ ЖАЛОБА (ID: ${userID})\nЗаказ: ${task}\nМастер: ${worker}`;
+        window.open(`https://wa.me/79640040355?text=${encodeURIComponent(message)}`, '_blank');
     }
 
     function saveOrder() {
@@ -242,7 +233,7 @@
         const phone = document.getElementById('phone').value;
         const city = document.getElementById('city-input').value;
 
-        if(!task || !addr || phone.length < 18) return alert("Заполните все данные для связи!");
+        if(!task || !addr || phone.length < 18) return alert("Заполните поля!");
 
         const id = Date.now().toString();
         const data = {
@@ -252,9 +243,13 @@
         };
 
         db.ref('shabashki/active/' + id).set(data).then(() => {
-            db.ref('push_queue').push({ title: "НОВАЯ ЗАЯВКА", body: city + ": " + task });
-            alert("Ваша заявка принята! Ожидайте звонка мастера.");
-            localStorage.removeItem('volt_draft_master');
+            // Уведомление для приложения мастеров (соответствует оригиналу)
+            db.ref('push_queue').push({ 
+                title: "НОВАЯ ШАБАШКА! 🔥", 
+                body: city + ": " + task,
+                timestamp: firebase.database.ServerValue.TIMESTAMP 
+            });
+            alert("Заявка создана!");
             resetForm();
             changeView('list', document.querySelectorAll('nav button')[1]);
         });
@@ -265,11 +260,12 @@
         document.getElementById('view-' + view).classList.remove('hidden');
         document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
         if(btn) btn.classList.add('active');
-        window.scrollTo(0,0);
     }
 
     function resetForm() {
-        fields.forEach(id => document.getElementById(id).value = '');
+        document.getElementById('task').value = '';
+        document.getElementById('address').value = '';
+        document.getElementById('phone').value = '';
     }
 
     window.onload = initSync;
